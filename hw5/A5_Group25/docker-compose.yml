@@ -1,0 +1,27 @@
+version: "3.7"
+
+services:
+    app:
+        image: gatech/dronedelivery
+        container_name: app
+        stdin_open: true
+        environment:
+            # NOTE: db refers to the db service defined below. Docker will automatically resolve this to the container
+            SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/group25
+            SPRING_DATASOURCE_USERNAME: root
+            SPRING_DATASOURCE_PASSWORD: omscs2023
+        depends_on:
+            - db
+        # sleep for 5 seconds to give the db time to boot up
+        command: >
+            sh -c "sleep 30 &&
+               java -jar app.jar"
+
+    db:
+        image: mysql:latest
+        container_name: db
+        environment:
+            - MYSQL_ROOT_PASSWORD=omscs2023
+            - MYSQL_DATABASE=group25
+        ports:
+            - "3306:3306"
